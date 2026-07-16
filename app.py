@@ -5,17 +5,15 @@ from sklearn.linear_model import LinearRegression
 import pandas as pd
 from supabase import create_client
 from dotenv import load_dotenv
-import os
+import os 
 
-
+#Criar variaveis de ambiente 
 load_dotenv()
 
 tabela = create_client(
     os.getenv("SUPABASE_URL"),
     os.getenv("SUPABASE_KEY")
 )
-
-
 
 #Habilitando a execução da API
 app = Flask(__name__)
@@ -53,16 +51,16 @@ def prever():
         })
         preco = modelo.predict(carro)[0]
         preco_formatado = round(float(preco),2)
-        #---------banco de Dados------
-        registros = {
+        #--------BANCO DE DADOS---------
+        registros = { 
             "ano":dados["ano"],
             "quilometragem":dados["quilometragem"],
             "motor":dados["motor"],
             "num_revisoes":dados["num_revisoes"],
             "preco":preco_formatado
-
         }
         tabela.table("historico_previsoes").insert(registros).execute()
+
 
 
 
@@ -79,5 +77,3 @@ def prever():
 #Iniciar a API
 if __name__ == '__main__':
     app.run(port=8000,host="0.0.0.0",debug=True)
-
-
